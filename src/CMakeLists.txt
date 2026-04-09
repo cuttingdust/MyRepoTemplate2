@@ -4,8 +4,7 @@ if(POLICY CMP0177)
 endif()
 
 # 使用 vcpkg 工具链文件 Warning  工具连设置必须是在project 前面
-#set(CMAKE_TOOLCHAIN_FILE $ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake CACHE STRING "Vcpkg toolchain file")
-set(CMAKE_TOOLCHAIN_FILE build/generators/conan_toolchain.cmake CACHE STRING "Conan toolchain file")
+set(CMAKE_TOOLCHAIN_FILE $ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake CACHE STRING "Vcpkg toolchain file")
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # 获取父目录
@@ -19,6 +18,13 @@ message(STATUS "Parent Directory Name: ${PARENT_NAME}")
 project(${PARENT_NAME})
 message("PROJECT_NAME: ${PROJECT_NAME}")
 
+# 查找 编译器
+if(MSVC)
+	enable_language(CXX)
+	# enable_language(CUDA)
+	# enable_language(ASM_MASM)
+endif()
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 if(MSVC)
 set(CMAKE_GENERATOR_PLATFORM x64)
@@ -26,6 +32,7 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# 设置 CXX 标准
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -41,7 +48,32 @@ if(OpenMP_FOUND)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 endif()
 
-# OpenCV
+# #MFC
+# find_package(MFC)
+# message("MFC_FOUND = ${MFC_FOUND}")
+
+# if(MFC_FOUND)
+# #1: static MFC library, 2: shared MFC library
+# set(CMAKE_MFC_FLAG 2)
+# endif()
+
+# CUDA
+# find_package(CUDAToolkit REQUIRED)
+# message("CUDAToolkit_FOUND = ${CUDAToolkit_FOUND}")
+# message("CUDAToolkit_VERSION =  ${CUDAToolkit_VERSION}")
+# message(STATUS "CUDA Compiler: ${CMAKE_CUDA_COMPILER}")
+# message(STATUS "CUDA Compiler Version: ${CMAKE_CUDA_COMPILER_VERSION}")
+# message(STATUS "CUDA Toolkit Root: ${CUDAToolkit_ROOT}")
+# message(STATUS "CUDA Architectures: ${CMAKE_CUDA_ARCHITECTURES}")
+
+# #Python3
+# find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+# message("Python3_FOUND = ${Python3_FOUND}")
+# message("Python3_VERSION = ${Python3_VERSION}")
+# message("Python3_LIBS = ${Python3_LIBRARIES}")
+#==================================================================================#
+
+# #OpenCV
 find_package(OpenCV CONFIG REQUIRED)
 message("OpenCV_FOUND = ${OpenCV_FOUND}")
 message("OpenCV_VERSION = ${OpenCV_VERSION}")
